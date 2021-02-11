@@ -1,22 +1,10 @@
+var http = require('http');
+var url = require('url');
 
-const port = process.env.PORT || 3000
-const app = express()
-const winston = require('winston')
-const consoleTransport = new winston.transports.Console()
-const myWinstonOptions = {
-    transports: [consoleTransport]
-}
-const logger = new winston.createLogger(myWinstonOptions)
-
-function logRequest(req, res, next) {
-    logger.info(req.url)
-    next()
-}
-app.use(logRequest)
-
-function logError(err, req, res, next) {
-    logger.error(err)
-    next()
-}
-app.use(logError)
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+http.createServer(function (req, res) {
+  console.log(req);
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  var q = url.parse(req.url, true).query;
+  var txt = q.year + " " + q.month;
+  res.end(txt);
+}).listen(80);
